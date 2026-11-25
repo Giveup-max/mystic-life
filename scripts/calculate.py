@@ -232,6 +232,7 @@ def print_chart(chart, profile=None):
     print(f"  扶抑视角：喜 {'、'.join(mv['fuyi_favor'])}，忌 {'、'.join(mv['fuyi_avoid'])}")
     print(f"  调候视角（{mv['season']}季）：喜 {'、'.join(mv['tiaohou_favor'])}")
     print(f"  日主特性视角（{c['day_wx']}）：喜 {'、'.join(mv['rizhu_favor'])}")
+    print(f"  体质倾向：{body_nature(c)}")
     if profile:
         favor, avoid = _print_profile_summary(profile)
         if favor or avoid:
@@ -258,6 +259,11 @@ def print_life(chart, gender, number=None, profile=None, use=None):
         extra = sum((WX_COLOR[x] for x in favor[1:]), [])
         print(f"  辅助色：{'、'.join(extra)}")
     print(f"  幸运食物（{WX_TASTE[use]}）：{'、'.join(WX_FOOD[use])}")
+    bn = body_nature(c)
+    if "寒湿" in bn:
+        print("  体质提示：寒湿体质，羊肉汤/姜/温热炖煮为益；牛肉性温可适量；忌生冷冰饮。")
+    elif "燥热" in bn:
+        print("  体质提示：燥热体质，宜银耳/梨/绿豆清凉润燥；忌辛辣烧烤。")
     print(f"  增能/招财水晶：{'、'.join(WX_CRYSTAL[use])}")
     print(f"  有利方位：{WX_DIR[use]}")
     mg = ming_gua(c, gender)
@@ -328,6 +334,16 @@ def print_day(chart, date_str):
         pass
     print(f"  你的日主：{c['day_gan']}（{c['day_wx']}）")
     print("  建议：优先安排「宜」中的事项，重要行动面向喜神/财神方位；避开冲煞对应的生肖协作。")
+
+
+def body_nature(chart):
+    mz = chart["month_zhi"]
+    season = {"寅":"春","卯":"春","辰":"春","巳":"夏","午":"夏","未":"夏","申":"秋","酉":"秋","戌":"秋","亥":"冬","子":"冬","丑":"冬"}[mz]
+    if season == "冬":
+        return "寒湿（冬生，喜温热、忌生冷）"
+    if season == "夏":
+        return "燥热（夏生，喜清凉、忌燥热）"
+    return "平和（春秋生，寒热居中）"
 
 
 def print_yun(chart, gender, year, profile=None):

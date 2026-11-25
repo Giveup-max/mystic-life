@@ -57,10 +57,20 @@ def test_eight_stars_keys():
         assert len(a) == 1 and len(b) == 1
 
 
+def test_body_nature():
+    solar = calc.Solar.fromYmdHms(1986, 1, 24, 0, 30, 0)
+    chart = calc.build_chart(solar, "male")
+    assert "寒湿" in calc.body_nature(chart)
+    solar2 = calc.Solar.fromYmdHms(1990, 7, 15, 12, 0, 0)
+    chart2 = calc.build_chart(solar2, None)
+    assert "燥热" in calc.body_nature(chart2)
+
 if __name__ == "__main__":
     test_day_master()
     test_multi_view_strong()
     test_profile_overrides()
     test_ming_gua()
     test_eight_stars_keys()
+    test_body_nature()
     print("ALL TESTS PASSED")
+
