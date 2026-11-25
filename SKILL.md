@@ -25,8 +25,8 @@ python '<skill>/scripts/calculate.py' --birth 1990-05-20 --time 12:30 --gender m
 ```
 
 - 若 `python`/`py` 不可用，用 `load_workspace_dependencies` 获取 Codex bundled Python 路径后替换 `python`。
-- `--mode`：`chart`（命盘+三视角）、`life`（生活选择）、`day`（当日决策）、`all`（默认）。
-- `--number 13812345678` 附加手机号数字能量；`--date 2026-12-03` 用于 `day` 指定日期。
+- `--mode`：`chart`（命盘+三视角）、`life`（生活选择）、`day`（当日决策）、`yun`（大运/流年）、`all`（默认）。
+- `--number 13812345678` 附加手机号数字能量；`--date 2026-12-03` 用于 `day` 指定日期；`--year 2027` 用于 `yun` 指定流年。
 
 ## 三视角喜用神
 
@@ -55,3 +55,4 @@ python '<skill>/scripts/calculate.py' --birth ... --mode life   # 自动读取�
 ## 参考与扩展
 
 规则来源、流派说明、映射表、如何修改规则，见 `references/rules.md`；安装与发布见 `README.md`。
+

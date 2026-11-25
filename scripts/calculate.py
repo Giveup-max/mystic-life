@@ -330,13 +330,69 @@ def print_day(chart, date_str):
     print("  建议：优先安排「宜」中的事项，重要行动面向喜神/财神方位；避开冲煞对应的生肖协作。")
 
 
+def print_yun(chart, gender, year, profile=None):
+    c = chart
+    print("== 大运 / 流年 ==")
+    if gender not in ("male", "female"):
+        print("  排大运需性别（--gender male/female），以下仅列流年。")
+    else:
+        yun = c["bazi"].getYun(gender)
+        print(f"  起运：{yun.getStartYear()} 年 {yun.getStartMonth()} 个月起运")
+        print("  大运：")
+        for dy in yun.getDaYun()[1:]:
+            gz = dy.getGanZhi()
+            if not gz:
+                continue
+            wx = f"{GAN_WX[gz[0]]}/{ZHI_WX[gz[1]]}"
+            print(f"    {dy.getStartYear()}-{dy.getEndYear()}（{dy.getStartAge()}-{dy.getEndAge()}岁） {gz}（{wx}）")
+    year = year or datetime.date.today().year
+    gz = Solar.fromYmd(year, 7, 1).getLunar().getYearInGanZhi()
+    gwx, zwx = GAN_WX[gz[0]], ZHI_WX[gz[1]]
+    dwx = c["day_wx"]
+    if gwx == dwx:
+        rel = "比劫（同我，助力/竞争）"
+    elif WX_SHENG.get(gwx) == dwx:
+        rel = "印星（生我，扶持）"
+    elif WX_SHENG.get(dwx) == gwx:
+        rel = "食伤（我生，泄秀/表达）"
+    elif WX_KE.get(gwx) == dwx:
+        rel = "官杀（克我，压力/责任）"
+    elif WX_KE.get(dwx) == gwx:
+        rel = "财星（我克，求财/耗神）"
+    else:
+        rel = "平"
+    print(f"  {year} 流年：{gz}（天干{gwx}，地支{zwx}）→ 对日主{dwx}为「{rel}」")
+    sx_to_zhi = {"鼠":"子","牛":"丑","虎":"寅","兔":"卯","龙":"辰","蛇":"巳","马":"午","羊":"未","猴":"申","鸡":"酉","狗":"戌","猪":"亥"}
+    chong_map = {"子":"午","丑":"未","寅":"申","卯":"酉","辰":"戌","巳":"亥","午":"子","未":"丑","申":"寅","酉":"卯","戌":"辰","亥":"巳"}
+    own_zhi = sx_to_zhi.get(c["shengxiao"])
+    if own_zhi and (chong_map.get(gz[1]) == own_zhi or chong_map.get(own_zhi) == gz[1]):
+        print(f"  ⚠ {year} 年冲你的生肖（{c['shengxiao']}），大事宜谨慎。")
+    favor = avoid = None
+    if profile:
+        _, favor, avoid = profile_conclusion(profile)
+    if not favor:
+        mv = multi_view_use(c)
+        favor, avoid = mv["fuyi_favor"], mv["fuyi_avoid"]
+    tips = []
+    if gwx in favor:
+        tips.append("流年天干属喜用，利好")
+    if gwx in avoid:
+        tips.append("流年天干属忌神，宜守")
+    if zwx in favor:
+        tips.append("流年地支属喜用，根基顺")
+    if zwx in avoid:
+        tips.append("流年地支属忌神，注意内耗")
+    print(f"  喜忌倾向：{'；'.join(tips) if tips else '中性，平常心'}")
+
+
 def main():
     ap = argparse.ArgumentParser(description="mystic-life 命理生活决策")
     ap.add_argument("--birth", help="公历生日 YYYY-MM-DD（mode=chart/life/day/all 必填）")
     ap.add_argument("--time", default="12:00", help="出生时间 HH:MM（默认 12:00）")
     ap.add_argument("--gender", choices=["male", "female"], default=None, help="性别，用于命卦")
-    ap.add_argument("--mode", choices=["chart", "life", "day", "all", "record", "profile-show"], default="all")
+    ap.add_argument("--mode", choices=["chart", "life", "day", "yun", "all", "record", "profile-show"], default="all")
     ap.add_argument("--date", default=None, help="当日决策日期 YYYY-MM-DD（默认今天）")
+    ap.add_argument("--year", type=int, default=None, help="[yun] 流年年份（默认今年）")
     ap.add_argument("--number", default=None, help="手机号，数字能量分析")
     ap.add_argument("--profile", default=DEFAULT_PROFILE, help="个人校准档案 JSON 路径")
     ap.add_argument("--item", help="[record] 颜色/物品，如 白色、橙色")
@@ -378,6 +434,8 @@ def main():
     if args.mode == "day":
         date_str = args.date or datetime.date.today().isoformat()
         print_day(chart, date_str)
+    if args.mode == "yun":
+        print_yun(chart, args.gender, args.year, profile)
     if args.number and args.mode not in ("life", "all"):
         print()
         print_phone(args.number)
@@ -385,4 +443,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

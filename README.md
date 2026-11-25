@@ -44,6 +44,7 @@ cp -r <repo> "$CODEX_HOME/skills/mystic-life"
 ```bash
 python scripts/calculate.py --birth 1990-05-20 --time 12:30 --gender male --mode all
 python scripts/calculate.py --birth 1990-05-20 --mode day --date 2026-12-03
+python scripts/calculate.py --birth 1990-05-20 --gender male --mode yun --year 2027
 python scripts/calculate.py --birth 1990-05-20 --mode all --number 13812345678
 ```
 
@@ -68,3 +69,4 @@ Windows PowerShell 下先设 `$env:PYTHONIOENCODING='utf-8'`。
 ## 许可
 
 本 skill 代码采用 MIT 许可。内置的 `lunar-python` 由 6tail 开发，MIT 许可，详见 `scripts/vendor/lunar_python/LICENSE`。
+
