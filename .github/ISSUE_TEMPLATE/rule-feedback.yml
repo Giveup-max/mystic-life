@@ -1,0 +1,41 @@
+---
+name: 规则候选反馈
+description: 报告一个体感观察，供评估是否升级为通用规则
+title: "[规则候选] "
+labels: ["rule-candidate"]
+body:
+  - type: markdown
+    attributes:
+      value: "反馈会被评估：仅多次、可复现、且尽量有他人印证的体感观察，才可能进入通用规则；个人差异只进本地档案。"
+  - type: input
+    id: item
+    attributes:
+      label: 颜色/食物/物品
+      description: 如“羊肉汤”“红色衣物”
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 这是偏好还是体感？
+      options: ["体感", "偏好"]
+  - type: dropdown
+    id: verdict
+    attributes:
+      label: 反应
+      options: ["利（舒服/顺利）", "弊（不适/不顺）", "中性"]
+  - type: input
+    id: times
+    attributes:
+      label: 观察次数
+      description: 至少 3 次才更有说服力
+  - type: textarea
+    id: context
+    attributes:
+      label: 情境与身体指标
+      description: 什么场景、睡眠/精力/情绪/消化等具体变化
+  - type: textarea
+    id: birth
+    attributes:
+      label: 参考命盘（可选）
+      description: 生日+时辰+性别，便于复现
