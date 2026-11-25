@@ -1,0 +1,6 @@
+{
+  "observations": [
+    {"item": "白色", "wx": "金", "kind": "体感", "times": 5, "context": "桌面/衣物", "indicators": "睡眠,精力,烦躁感", "verdict": "利"},
+    {"item": "红色", "wx": "火", "kind": "体感", "times": 3, "context": "衣物", "indicators": "烦躁感", "verdict": "弊"}
+  ]
+}
